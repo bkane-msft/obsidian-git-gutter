@@ -3,7 +3,6 @@ import { HunksStateHelper } from "./hunkState";
 import type { EditorView } from "codemirror";
 import type ObsidianGit from "src/main";
 import { Hunks } from "./hunks";
-import type { SimpleGit } from "src/gitManager/simpleGit";
 
 export class HunkActions {
     constructor(private readonly plugin: ObsidianGit) {}
@@ -17,10 +16,6 @@ export class HunkActions {
             return undefined;
         }
         return { editor, obEditor };
-    }
-
-    private get gitManager(): SimpleGit {
-        return this.plugin.gitManager as SimpleGit;
     }
 
     resetHunk(pos?: number): void {
@@ -81,7 +76,7 @@ export class HunkActions {
         const patch =
             Hunks.createPatch(filepath, [hunk], "100644", invert).join("\n") +
             "\n";
-        await this.gitManager.applyPatch(patch);
+        await this.plugin.localGit.applyPatch(patch);
 
         this.plugin.app.workspace.trigger("obsidian-git:refresh");
     }

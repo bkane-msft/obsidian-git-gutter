@@ -1,106 +1,80 @@
-## Project overview
+# Project overview
 
-This repository contains the `obsidian-git` Obsidian community plugin. It
-bundles TypeScript and Svelte source into the root-level `main.js` loaded by
-Obsidian, with `manifest.json` and `styles.css` as the other release
-artifacts. The plugin manages Git repositories inside an Obsidian vault,
-including source control, history, diff views, automatic routines, and editor
-line authoring.
+This repository is **git-gutter**, a stripped-down, local-only fork of the
+`obsidian-git` community plugin. It keeps only the editor "git gutter" (the
+"Signs" feature): read-only change marks in the gutter plus optional per-hunk
+stage/reset/preview. It bundles TypeScript into the root-level `main.js` loaded
+by Obsidian, with `manifest.json` and `styles.css` as the other release
+artifacts.
 
-The main runtime boundary is:
+The runtime boundary is intentionally small:
 
--   `src/main.ts` owns plugin lifecycle, settings, commands/views registration,
-    refresh/reload orchestration, user-facing notices, and cleanup.
--   `src/gitManager/gitManager.ts` defines the Git capability interface.
--   `src/gitManager/simpleGit.ts` is the desktop/native Git implementation.
--   `src/gitManager/isomorphicGit.ts` is the mobile/browser-compatible
-    implementation.
--   `src/commands.ts` registers stable user-facing command IDs.
--   `src/ui/` contains source-control, history, diff, modal, and status-bar UI.
--   `src/editor/` contains CodeMirror integrations for diff signs, hunk actions,
-    and line authoring.
--   `src/setting/` contains persisted settings and local-storage migrations.
--   `tests/` contains Vitest tests and Obsidian stubs/helpers.
+- `src/main.ts` owns plugin lifecycle, settings load/save, the settings tab,
+  command registration, the refresh event bridge, and `displayError`/
+  `displayMessage`. It is minimal by design.
+- `src/localGit.ts` is the entire Git layer: a tiny desktop wrapper that shells
+  out to the system `git` binary for `git show` (read staged/committed content)
+  and `git apply --cached` (stage a hunk). There is no `simple-git`/
+  `isomorphic-git`, no remote, and no working-tree mutation beyond staging.
+- `src/editor/signs/` is the CodeMirror 6 gutter feature: diffing
+  (`diff.ts`, `hunks.ts`, `hunkState.ts`), the gutter markers (`gutter.ts`),
+  the hunk preview tooltip (`tooltip.ts`), hunk actions (`hunkActions.ts`), and
+  activation/lifecycle (`signsIntegration.ts`, `signsProvider.ts`), plus the
+  status-bar summary (`changesStatusBar.ts`).
+- `src/editor/control.ts` + `src/editor/eventsPerFilepath.ts` are the per-file
+  pub/sub plumbing that pushes new compare results into each editor.
+- `src/commands.ts` registers the hunk commands (stable IDs).
+- `src/setting/settings.ts` is the settings tab; `src/types.ts` +
+  `src/constants.ts` hold the settings interface, defaults, and the workspace
+  event type augmentation.
 
-Before changing behavior, identify whether it belongs in the shared
-`GitManager` contract, both Git backends, the plugin orchestration layer, or a
-specific UI/editor feature. Changes that work only with native Git are not
-automatically valid on mobile.
+Everything removed from upstream (remote, auto-commit, source-control/history/
+diff views, line authoring, submodules, mobile backend) is gone — do not
+reintroduce it unless explicitly asked.
 
 ## Environment and commands
 
-Use Node.js `>=24` and pnpm `>=11`, as declared in `package.json`. Use pnpm,
-not npm or yarn; commit changes to `pnpm-lock.yaml` when dependency versions
-change. Install dependencies with:
+Use Node.js `>=24` and pnpm `>=11` (see `package.json`). Use pnpm, not npm or
+yarn; commit `pnpm-lock.yaml` when dependency versions change.
 
 ```sh
 pnpm install
-```
-
-Useful commands:
-
-```sh
 pnpm run dev          # watch and rebuild main.js with inline source maps
 pnpm run build        # production bundle; writes the ignored root main.js
 pnpm run tsc          # strict TypeScript check
-pnpm run svelte       # Svelte type/check validation
 pnpm run format       # Prettier check (does not rewrite files)
 pnpm run lint         # ESLint for src, tests, and vitest.config.ts
 pnpm run test         # Vitest test suite
-pnpm run test:watch   # interactive Vitest watch mode
-pnpm run test:coverage
-pnpm run all          # tsc, Svelte, format, lint, and tests
+pnpm run all          # tsc, format, lint, and tests
 ```
 
-The CI workflow runs the checks separately and also verifies the production
-build. For a normal source change, run at least the focused tests plus
-`pnpm run tsc`, `pnpm run svelte`, `pnpm run lint`, and `pnpm run format`; run
-`pnpm run all` before handoff when practical. Run `pnpm run build` for changes
-to bundling, dependencies, manifest/release behavior, or runtime imports.
+Run `pnpm run all` before handoff. Run `pnpm run build` for changes to bundling,
+dependencies, manifest/release behavior, or runtime imports.
 
-## Source and implementation conventions
+**Local toolchain note:** if `node -v` is `< 24` (e.g. a Volta-pinned Node 20),
+the Homebrew `node@26` works: `export PATH="/opt/homebrew/opt/node@26/bin:$PATH"`
+and install pnpm with `npm install -g pnpm` if it is missing.
 
--   Use the existing double-quote and Prettier formatting style. Do not make
-    unrelated formatting changes.
--   Keep command IDs stable after release. Add or change commands in
-    `src/commands.ts`, and preserve their checks for active files and Git
-    readiness where applicable.
--   Keep `src/main.ts` focused on lifecycle and coordination. Put Git behavior in
-    the manager abstraction/backend, reusable logic in focused modules, and UI
-    behavior in the relevant view/modal/component.
--   When adding a Git operation, update the abstract contract and both
-    implementations. Preserve the shared operation-state handling in
-    `GitManager.withGitOperation` and make failure paths restore state.
--   Prefer `async`/`await`; surface failures through the plugin's existing
-    `displayError`/`displayMessage` mechanisms. Do not silently swallow Git
-    errors, authentication failures, conflicts, cancellation, or offline-mode
-    transitions.
--   Use Obsidian's `registerEvent`, `registerDomEvent`, `registerInterval`, and
-    view registration helpers for resources owned by the plugin. If a feature
-    also creates a timer, queue task, editor extension, or status-bar element,
-    clean it up in its unload path. Check both ordinary unload and settings
-    reload (`unloadPlugin` followed by `init`).
--   Route serialized or competing Git actions through `PromiseQueue`; do not
-    introduce concurrent mutations to the working tree, index, or repository
-    state without examining the existing queueing behavior.
--   Keep filesystem paths vault/repository-relative at API boundaries where the
-    existing code does so. Git repository relative paths should be contained
-    within the git manager and vault relative paths should be used as in/output
-    to the git manager. Avoid absolute paths, and do not reach outside the vault or
-    repository for any reason.
--   Preserve the desktop/mobile split. Desktop uses Node/Electron, whereas
-    mobile uses Capcitor. Therefore on desktop a native Git installation is used
-    via `simple-git` and on mobile a javascript implementation of git:
-    `isomorphic-git` that uses the Obsidian adapter and `requestUrl`. Note that
-    some features are desktop only. Test or reason about both implementations
-    when changing shared Git semantics.
--   Svelte components are compiled by `esbuild-svelte` with injected CSS. Keep
-    component state and event handlers local where possible, and coordinate with
-    their owning TypeScript view through the established props/events rather than
-    reaching into unrelated plugin state.
+## Conventions
+
+- Keep the double-quote, 4-space Prettier style. Do not make unrelated
+  formatting changes.
+- Keep command IDs in `src/commands.ts` stable after release.
+- Keep `src/main.ts` focused on lifecycle/coordination. Put Git behavior in
+  `src/localGit.ts` and gutter behavior in `src/editor/signs/`.
+- Keep filesystem paths vault-relative at API boundaries; convert to
+  repo-relative only inside `LocalGit`. Never reach outside the vault/repo.
+- Prefer `async`/`await`; surface failures through `displayError`/
+  `displayMessage`. Route competing Git actions through `PromiseQueue`.
+- Use Obsidian's `registerEvent`, `registerInterval`, and editor-extension
+  registration helpers so resources are cleaned up on unload, and verify the
+  deactivate path in `SignsFeature.deactivateFeature`.
+- This plugin is desktop-only (`isDesktopOnly: true`); it depends on a native
+  `git` binary.
 
 ## Testing
 
 Tests run in the Node environment with Vitest. `vitest.config.ts` aliases
 `obsidian` to `tests/stubs/obsidian.ts` and `src` to the source directory, and
-loads `tests/setup.ts` for every test file. Refer to tests/README.md for details.
+loads `tests/setup.ts`. The suite covers the pure diff/hunk/patch logic under
+`tests/editor/signs/`. See `tests/README.md` for details.

@@ -3,58 +3,25 @@ on:
     push:
     pull_request:
 jobs:
-    svelte-check:
+    check:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
             - uses: pnpm/action-setup@v6
               with:
                   version: latest
-            - name: Install modules
-              run: pnpm install
-            - name: Run Svelte-Check
-              run: pnpm run svelte
-    lint:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v7
-            - uses: pnpm/action-setup@v6
+            - uses: actions/setup-node@v4
               with:
-                  version: latest
-            - name: Install modules
-              run: pnpm install
-            - name: Run ESLint
-              run: pnpm run lint
-    format:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v7
-            - uses: pnpm/action-setup@v6
-              with:
-                  version: latest
-            - name: Install modules
-              run: pnpm install
-            - name: Run Prettier
-              run: pnpm run format
-    compile:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v7
-            - uses: pnpm/action-setup@v6
-              with:
-                  version: latest
+                  node-version: 24
             - name: Install modules
               run: pnpm install
             - name: Run tsc
-              run: pnpm run tsc --noEmit
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v7
-            - uses: pnpm/action-setup@v6
-              with:
-                  version: latest
-            - name: Install modules
-              run: pnpm install
+              run: pnpm run tsc
+            - name: Run Prettier
+              run: pnpm run format
+            - name: Run ESLint
+              run: pnpm run lint
+            - name: Run tests
+              run: pnpm run test
             - name: Run build
               run: pnpm run build

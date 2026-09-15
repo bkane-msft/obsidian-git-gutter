@@ -14,7 +14,6 @@ import {
     selectedHunksState,
 } from "./tooltip";
 
-export { previewColor } from "src/editor/lineAuthor/view/gutter/coloring";
 export class SignsProvider {
     constructor(private plugin: ObsidianGit) {}
 
@@ -43,21 +42,9 @@ export class SignsProvider {
     public destroy() {}
 
     private async computeSigns(filepath: string) {
-        const gitManager =
-            this.plugin.editorIntegration.lineAuthoringFeature.isAvailableOnCurrentPlatform()
-                .gitManager;
-
-        // const headRevision =
-        //     await gitManager.submoduleAwareHeadRevisonInContainingDirectory(
-        //         filepath
-        //     );
-
-        const compareText = await gitManager
+        const compareText = await this.plugin.localGit
             .show("", filepath)
             .catch(() => undefined);
-        // const compareTextHead = await gitManager
-        //     .show(headRevision, filepath)
-        //     .catch(() => undefined);
         const compareTextHead = undefined;
         this.notifySignComputationResultToSubscribers(filepath, {
             compareText,

@@ -1,7 +1,6 @@
 import type { Extension } from "@codemirror/state";
 import type { EventRef, WorkspaceLeaf } from "obsidian";
 import { MarkdownView, Platform, TFile } from "obsidian";
-import { SimpleGit } from "src/gitManager/simpleGit";
 import type ObsidianGit from "src/main";
 import {
     enabledHunksExtensions,
@@ -83,14 +82,9 @@ export class SignsFeature {
 
     public isAvailableOnCurrentPlatform(): {
         available: boolean;
-        gitManager: SimpleGit;
     } {
         return {
-            available: this.plg.useSimpleGit && Platform.isDesktopApp,
-            gitManager:
-                this.plg.gitManager instanceof SimpleGit
-                    ? this.plg.gitManager
-                    : undefined!,
+            available: Platform.isDesktopApp,
         };
     }
 

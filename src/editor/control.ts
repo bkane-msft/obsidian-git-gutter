@@ -3,8 +3,6 @@ import { StateField } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
 import { editorEditorField, editorInfoField } from "obsidian";
 import { eventsPerFilePathSingleton } from "./eventsPerFilepath";
-import type { LineAuthoring, LineAuthoringId } from "./lineAuthor/model";
-import { newComputationResultAsTransaction } from "./lineAuthor/model";
 import {
     hunksState,
     newGitCompareResultAsTransaction,
@@ -26,20 +24,6 @@ export class FileSubscriber {
 
     constructor(private state: EditorState) {
         this.subscribeMe();
-    }
-
-    public notifyLineAuthoring(id: LineAuthoringId, la: LineAuthoring) {
-        if (this.view === undefined) {
-            console.warn(
-                `Git: View is not defined for editor cache key. Unforeseen situation. id: ${id}`
-            );
-            return;
-        }
-
-        // using "this.state" directly here leads to some problems when closing panes. Hence, "this.view.state"
-        const state = this.view.state;
-        const transaction = newComputationResultAsTransaction(id, la, state);
-        this.view.dispatch(transaction);
     }
 
     public notifyGitCompare(data: GitCompareResult) {

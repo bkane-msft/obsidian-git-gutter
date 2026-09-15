@@ -6,7 +6,7 @@ on:
             - "*"
 
 env:
-    PLUGIN_NAME: obsidian-git
+    PLUGIN_NAME: git-gutter
 
 permissions:
     id-token: write
@@ -21,6 +21,9 @@ jobs:
             - uses: pnpm/action-setup@v6
               with:
                   version: latest
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 24
             - name: Build
               id: build
               run: |
@@ -43,8 +46,7 @@ jobs:
               with:
                   tag_name: ${{ github.ref }}
                   name: ${{ github.ref_name }}
-                  generate_release_notes: false
-                  body: See the [changelog](https://github.com/Vinzent03/obsidian-git/blob/master/CHANGELOG.md) for details.
+                  generate_release_notes: true
                   draft: false
                   prerelease: false
                   files: |

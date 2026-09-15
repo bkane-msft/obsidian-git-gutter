@@ -1,10 +1,8 @@
 {
-    "author": "Vinzent",
-    "authorUrl": "https://github.com/Vinzent03",
-    "id": "obsidian-git",
-    "name": "Git",
-    "description": "Integrate Git version control with automatic backup and other advanced features.",
-    "isDesktopOnly": false,
-    "fundingUrl": "https://ko-fi.com/vinzent",
-    "version": "2.39.0"
+    "author": "bkane",
+    "id": "git-gutter",
+    "name": "Git Gutter",
+    "description": "Local, read-only Git change gutter for the editor, with optional per-hunk stage/reset/preview. Forked and stripped down from obsidian-git.",
+    "isDesktopOnly": true,
+    "version": "0.1.0"
 }
