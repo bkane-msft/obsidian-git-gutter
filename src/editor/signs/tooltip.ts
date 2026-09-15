@@ -82,10 +82,20 @@ export const cursorTooltipBaseTheme = EditorView.baseTheme({
         backgroundColor: "var(--background-primary-alt)",
         border: "var(--border-width) solid var(--background-primary-alt)",
         borderRadius: "var(--radius-s)",
+        maxHeight: "60vh",
+        maxWidth: "min(80vw, 900px)",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
     },
     ".cm-tooltip.git-diff-tooltip .tooltip-toolbar": {
         display: "flex",
         padding: "var(--size-2-1)",
+        flex: "0 0 auto",
+    },
+    ".cm-tooltip.git-diff-tooltip .d2h-file-diff": {
+        overflow: "auto",
+        minHeight: "0",
     },
 });
 
