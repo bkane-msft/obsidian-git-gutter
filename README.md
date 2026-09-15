@@ -50,8 +50,20 @@ pnpm run build        # produces main.js
 ```
 
 Then copy `main.js`, `manifest.json`, and `styles.css` into your vault at
-`.obsidian/plugins/git-gutter/`, and enable **Git Gutter** under
+`<vault>/.obsidian/plugins/git-gutter/`, and enable **Git Gutter** under
 Settings → Community plugins (with Restricted mode off).
+
+To copy the built files into a vault automatically, point `OBSIDIAN_VAULT_ROOT`
+at your vault and run the install script:
+
+```sh
+export OBSIDIAN_VAULT_ROOT=/path/to/your/vault
+pnpm run build:install   # build, then copy the 3 files into the vault
+# or just: pnpm run install:vault   (copies already-built files)
+```
+
+Reload Obsidian (or toggle the plugin off/on) after copying to load a new
+`main.js`.
 
 Common scripts:
 

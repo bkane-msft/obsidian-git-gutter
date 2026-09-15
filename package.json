@@ -12,6 +12,8 @@
         "test": "vitest run",
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage",
+        "install:vault": "if [ -z \"$OBSIDIAN_VAULT_ROOT\" ]; then echo 'Set OBSIDIAN_VAULT_ROOT to your vault path first'; exit 1; fi; mkdir -p \"$OBSIDIAN_VAULT_ROOT/.obsidian/plugins/git-gutter\" && cp main.js manifest.json styles.css \"$OBSIDIAN_VAULT_ROOT/.obsidian/plugins/git-gutter/\"",
+        "build:install": "pnpm run build && pnpm run install:vault",
         "all": "pnpm run tsc && pnpm run format && pnpm run lint && pnpm run test"
     },
     "keywords": [],
