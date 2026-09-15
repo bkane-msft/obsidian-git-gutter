@@ -17,7 +17,7 @@
         "all": "pnpm run tsc && pnpm run format && pnpm run lint && pnpm run test"
     },
     "keywords": [],
-    "author": "bkane",
+    "author": "bkane-msft",
     "license": "MIT",
     "type": "module",
     "engines": {

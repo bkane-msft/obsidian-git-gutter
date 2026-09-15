@@ -1,5 +1,5 @@
 {
-    "author": "bkane",
+    "author": "bkane-msft",
     "id": "git-gutter",
     "name": "Git Gutter",
     "description": "Local, read-only Git change gutter for the editor, with optional per-hunk stage/reset/preview. Forked and stripped down from obsidian-git.",
