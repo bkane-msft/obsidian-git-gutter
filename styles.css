@@ -48,10 +48,6 @@
     align-self: start;
 }
 
-.git-gutter-marker.staged {
-    opacity: 0.5;
-}
-
 /* Prevent shifting of the editor when git signs gutter is the only gutter present */
 .cm-gutters.cm-gutters-before:has(> .git-signs-gutter:only-child) {
     margin-inline-end: 0;

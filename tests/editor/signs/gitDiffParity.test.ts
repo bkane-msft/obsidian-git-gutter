@@ -4,7 +4,6 @@ import { tmpdir } from "os";
 import path from "path";
 import { describe, expect, it } from "vitest";
 import { computeHunks } from "../../../src/editor/signs/diff";
-import { Hunks } from "../../../src/editor/signs/hunks";
 
 type DiffCase = {
     name: string;
@@ -81,7 +80,14 @@ function parseNoIndexHunkHeaders(diff: string) {
     return diff
         .split("\n")
         .filter((line) => line.startsWith("@@ "))
-        .map((line) => Hunks.parseDiffLine(line));
+        .map((line) => {
+            const [, oldStart, oldCount, newStart, newCount] =
+                /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/.exec(line)!;
+            return {
+                removed: { start: +oldStart!, count: +(oldCount ?? 1) },
+                added: { start: +newStart!, count: +(newCount ?? 1) },
+            };
+        });
 }
 
 describe("computeHunks compared with git diff --no-index", () => {

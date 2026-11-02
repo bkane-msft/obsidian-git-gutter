@@ -26,7 +26,6 @@ export const hunksState: StateField<HunksData | undefined> = StateField.define<
             : {
                   maxDiffTimeMs: 0,
                   hunks: [],
-                  stagedHunks: [],
                   chunks: undefined,
                   isDirty: false,
               };
@@ -35,7 +34,6 @@ export const hunksState: StateField<HunksData | undefined> = StateField.define<
         for (const effect of transaction.effects) {
             if (effect.is(GitCompareResultEffectType)) {
                 hunksData.compareText = effect.value.compareText;
-                hunksData.compareTextHead = effect.value.compareTextHead;
 
                 // Only issue new hunk computation if compareText has changed
                 newCompare = previous?.compareText !== effect.value.compareText;
@@ -97,10 +95,8 @@ export const hunksState: StateField<HunksData | undefined> = StateField.define<
             }
         } else {
             hunksData.compareText = undefined;
-            hunksData.compareTextHead = undefined;
             hunksData.chunks = undefined;
             hunksData.hunks = [];
-            hunksData.stagedHunks = [];
             hunksData.isDirty = false;
             const file = transaction.state.field(editorInfoField).file;
             pluginRef.plugin?.editorIntegration.signsFeature.changeStatusBar?.display(
@@ -292,7 +288,6 @@ export type ComputedHunksData = {
 
 export type HunksData = {
     hunks: Hunk[];
-    stagedHunks: Hunk[];
     chunks: readonly Chunk[] | undefined;
     changeDesc?: ChangeDesc;
     isDirty: boolean;
@@ -301,7 +296,6 @@ export type HunksData = {
 
 export type GitCompareResult = {
     compareText?: string;
-    compareTextHead?: string;
 };
 
 export function newGitCompareResultAsTransaction(

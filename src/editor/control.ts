@@ -43,11 +43,7 @@ export class FileSubscriber {
         // using "this.state" directly here leads to some problems when closing panes. Hence, "this.view.state"
         const state = this.view.state;
         const hunkState = state.field(hunksState);
-        if (
-            !hunkState ||
-            hunkState.compareText != data.compareText ||
-            hunkState.compareTextHead != data.compareTextHead
-        ) {
+        if (!hunkState || hunkState.compareText != data.compareText) {
             const transaction = newGitCompareResultAsTransaction(data, state);
 
             this.view.dispatch(transaction);

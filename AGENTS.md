@@ -11,7 +11,7 @@ The runtime boundary is intentionally small:
 
 - `src/main.ts` owns plugin lifecycle, settings load/save, the settings tab,
   command registration, the refresh event bridge, and `displayError`/
-  `displayMessage`. It is minimal by design.
+  It is minimal by design.
 - `src/localGit.ts` is the entire Git layer: a tiny desktop wrapper that shells
   out to the system `git` binary for `git show` (read staged/committed content).
   There is no `simple-git`/`isomorphic-git`, no remote, no staging, and no
@@ -63,8 +63,7 @@ and install pnpm with `npm install -g pnpm` if it is missing.
   `src/localGit.ts` and gutter behavior in `src/editor/signs/`.
 - Keep filesystem paths vault-relative at API boundaries; convert to
   repo-relative only inside `LocalGit`. Never reach outside the vault/repo.
-- Prefer `async`/`await`; surface failures through `displayError`/
-  `displayMessage`.
+- Prefer `async`/`await`; surface failures through `displayError`.
 - Use Obsidian's `registerEvent`, `registerInterval`, and editor-extension
   registration helpers so resources are cleaned up on unload, and verify the
   deactivate path in `SignsFeature.deactivateFeature`.

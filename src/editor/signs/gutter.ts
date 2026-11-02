@@ -8,18 +8,13 @@ import {
 } from "./hunkState";
 
 class GitGutterMarker extends GutterMarker {
-    constructor(
-        readonly type: SignType,
-        readonly staged: boolean
-    ) {
+    constructor(readonly type: SignType) {
         super();
     }
 
     toDOM(_: EditorView) {
         const marker = createDiv();
-        marker.className = `git-gutter-marker git-${this.type} ${
-            this.staged ? "staged" : "unstaged"
-        }`;
+        marker.className = `git-gutter-marker git-${this.type}`;
         if (this.type == "changedelete") {
             marker.setText("~");
         }
@@ -48,16 +43,7 @@ export const signsMarker = StateField.define({
             newCompareResult ||
             ((tr.docChanged || rangeSet.size == 0) && data.isDirty == false)
         ) {
-            const linesWithSign = new Set<number>();
-            const markers = getMarkers(tr, data.hunks, false, linesWithSign);
-            const stagedMarkers = getMarkers(
-                tr,
-                data.stagedHunks,
-                true,
-                linesWithSign
-            );
-            rangeSet = RangeSet.of([...markers, ...stagedMarkers], true);
-            return rangeSet;
+            return RangeSet.of(getMarkers(tr, data.hunks), true);
         } else if (tr.docChanged) {
             rangeSet = rangeSet.map(tr.changes);
         }
@@ -65,12 +51,8 @@ export const signsMarker = StateField.define({
     },
 });
 
-function getMarkers(
-    tr: Transaction,
-    hunks: Hunk[],
-    staged: boolean,
-    linesWithSign: Set<number>
-) {
+function getMarkers(tr: Transaction, hunks: Hunk[]) {
+    const linesWithSign = new Set<number>();
     const signs = [];
     for (let i = 0; i < hunks.length; i++) {
         const prevHunk = i > 0 ? hunks[i - 1] : undefined;
@@ -85,10 +67,7 @@ function getMarkers(
         const lineInfo = tr.state.doc.line(sign.lnum);
         linesWithSign.add(sign.lnum);
         markers.push(
-            new GitGutterMarker(sign.type, staged).range(
-                lineInfo.from,
-                lineInfo.to
-            )
+            new GitGutterMarker(sign.type).range(lineInfo.from, lineInfo.to)
         );
     }
     return markers;
@@ -98,6 +77,6 @@ export const signsGutter = gutter({
     class: "git-signs-gutter",
     markers: (view) => view.state.field(signsMarker, false) ?? RangeSet.empty,
     initialSpacer: (_) => {
-        return new GitGutterMarker("delete", false);
+        return new GitGutterMarker("delete");
     },
 });

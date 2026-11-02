@@ -40,10 +40,8 @@ export class SignsProvider {
         const compareText = await this.plugin.localGit
             .show("", filepath)
             .catch(() => undefined);
-        const compareTextHead = undefined;
         this.notifySignComputationResultToSubscribers(filepath, {
             compareText,
-            compareTextHead,
         });
     }
 

@@ -78,11 +78,6 @@ export default class ObsidianGit extends Plugin {
         await this.saveData(this.settings);
     }
 
-    displayMessage(message: string, timeout: number = 4 * 1000): void {
-        new Notice(message, timeout);
-        console.log(`git-gutter: ${message}`);
-    }
-
     displayError(data: unknown, timeout: number = 10 * 1000): void {
         const message = data instanceof Error ? data.message : String(data);
         new Notice(`Git Gutter error: ${message}`, timeout);
