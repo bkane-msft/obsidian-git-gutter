@@ -1,20 +1,18 @@
 import { spawn } from "child_process";
 import type { FileSystemAdapter } from "obsidian";
-import { normalizePath } from "obsidian";
 import * as path from "path";
 import type ObsidianGit from "./main";
 
 /**
- * Minimal, mostly read-only local Git wrapper for the gutter feature.
+ * Minimal, read-only local Git wrapper for the gutter feature.
  *
  * It shells out to the system `git` binary (desktop only) and exposes just the
  * operations the gutter needs:
  * - {@link show} to read the staged/committed version of a file for diffing
- * - {@link applyPatch} to stage a single hunk via `git apply --cached`
  * - {@link isGitInstalled} to guard activation
  *
- * There is intentionally no remote, history, or working-tree mutation beyond
- * staging a hunk. All paths are vault-relative at the API boundary and are
+ * There is intentionally no remote, history, staging, or working-tree
+ * mutation. All paths are vault-relative at the API boundary and are
  * converted to repository-relative paths internally.
  */
 export class LocalGit {
@@ -64,27 +62,6 @@ export class LocalGit {
     async show(commitHash: string, file: string): Promise<string> {
         const repoPath = this.getRelativeRepoPath(file);
         return this.run(["show", `${commitHash}:${repoPath}`]);
-    }
-
-    /** Apply a unified-diff patch to the index (used to stage a hunk). */
-    async applyPatch(patch: string): Promise<void> {
-        const adapter = this.plugin.app.vault.adapter as FileSystemAdapter;
-        const relPatchPath = normalizePath(
-            `${this.plugin.manifest.dir ?? ""}/.git-gutter.patch`
-        );
-        await adapter.write(relPatchPath, patch);
-        const absPatchPath = adapter.getFullPath(relPatchPath);
-        try {
-            await this.run([
-                "apply",
-                "--cached",
-                "--unidiff-zero",
-                "--whitespace=nowarn",
-                absPatchPath,
-            ]);
-        } finally {
-            await adapter.remove(relPatchPath);
-        }
     }
 
     private run(args: string[]): Promise<string> {

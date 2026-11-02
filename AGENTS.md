@@ -2,8 +2,8 @@
 
 This repository is **git-gutter**, a stripped-down, local-only fork of the
 `obsidian-git` community plugin. It keeps only the editor "git gutter" (the
-"Signs" feature): read-only change marks in the gutter plus optional per-hunk
-stage/reset. It bundles TypeScript into the root-level `main.js` loaded
+"Signs" feature): read-only change marks in the gutter plus an optional
+status-bar change summary. It bundles TypeScript into the root-level `main.js` loaded
 by Obsidian, with `manifest.json` and `styles.css` as the other release
 artifacts.
 
@@ -13,17 +13,16 @@ The runtime boundary is intentionally small:
   command registration, the refresh event bridge, and `displayError`/
   `displayMessage`. It is minimal by design.
 - `src/localGit.ts` is the entire Git layer: a tiny desktop wrapper that shells
-  out to the system `git` binary for `git show` (read staged/committed content)
-  and `git apply --cached` (stage a hunk). There is no `simple-git`/
-  `isomorphic-git`, no remote, and no working-tree mutation beyond staging.
+  out to the system `git` binary for `git show` (read staged/committed content).
+  There is no `simple-git`/`isomorphic-git`, no remote, no staging, and no
+  working-tree mutation.
 - `src/editor/signs/` is the CodeMirror 6 gutter feature: diffing
   (`diff.ts`, `hunks.ts`, `hunkState.ts`), the gutter markers (`gutter.ts`),
-  hunk actions (`hunkActions.ts`), and
-  activation/lifecycle (`signsIntegration.ts`, `signsProvider.ts`), plus the
+  and activation/lifecycle (`signsIntegration.ts`, `signsProvider.ts`), plus the
   status-bar summary (`changesStatusBar.ts`).
 - `src/editor/control.ts` + `src/editor/eventsPerFilepath.ts` are the per-file
   pub/sub plumbing that pushes new compare results into each editor.
-- `src/commands.ts` registers the hunk commands (stable IDs).
+- `src/commands.ts` registers the _Refresh gutter_ command (stable ID).
 - `src/setting/settings.ts` is the settings tab; `src/types.ts` +
   `src/constants.ts` hold the settings interface, defaults, and the workspace
   event type augmentation.
@@ -65,7 +64,7 @@ and install pnpm with `npm install -g pnpm` if it is missing.
 - Keep filesystem paths vault-relative at API boundaries; convert to
   repo-relative only inside `LocalGit`. Never reach outside the vault/repo.
 - Prefer `async`/`await`; surface failures through `displayError`/
-  `displayMessage`. Route competing Git actions through `PromiseQueue`.
+  `displayMessage`.
 - Use Obsidian's `registerEvent`, `registerInterval`, and editor-extension
   registration helpers so resources are cleaned up on unload, and verify the
   deactivate path in `SignsFeature.deactivateFeature`.
@@ -76,5 +75,5 @@ and install pnpm with `npm install -g pnpm` if it is missing.
 
 Tests run in the Node environment with Vitest. `vitest.config.ts` aliases
 `obsidian` to `tests/stubs/obsidian.ts` and `src` to the source directory, and
-loads `tests/setup.ts`. The suite covers the pure diff/hunk/patch logic under
+loads `tests/setup.ts`. The suite covers the pure diff/hunk logic under
 `tests/editor/signs/`. See `tests/README.md` for details.

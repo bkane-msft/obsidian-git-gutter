@@ -1,9 +1,9 @@
 # Git Gutter (Obsidian)
 
 A small, **local, read-only** Obsidian plugin that shows a Git change gutter in
-the editor — added / modified / deleted marks next to each line — plus optional
-per-hunk **stage / reset** commands. The gutter marks are display-only;
-clicking them does nothing.
+the editor — added / modified / deleted marks next to each line — plus an
+optional change summary in the status bar. The gutter marks are display-only;
+clicking them does nothing, and the plugin never stages or modifies files.
 
 It is a stripped-down fork of
 [obsidian-git](https://github.com/Vinzent03/obsidian-git) that keeps only the
@@ -16,10 +16,7 @@ removed.
 
 - Change marks in the editor gutter compared to the staged/committed version of
   the file.
-- Commands to **stage** the hunk under the cursor (`git apply --cached`) or
-  **reset** it back to the committed version.
-- Commands: _Stage hunk_, _Reset hunk_, _Go to next/previous
-  hunk_, and _Refresh gutter_.
+- A _Refresh gutter_ command.
 - Optional per-editor change summary (`+added ~changed -deleted`) in the status
   bar.
 
@@ -34,7 +31,6 @@ removed.
 ## Settings
 
 - **Show gutter change marks** — toggle the gutter marks.
-- **Hunk commands** — register the stage/reset/navigation commands.
 - **Editor change summary in status bar** — `disabled`, `colored`, or
   `monochrome`.
 - **Git binary path** — optional; defaults to `git` on your `PATH`.

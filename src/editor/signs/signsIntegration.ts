@@ -35,8 +35,7 @@ export class SignsFeature {
     public conditionallyActivateBySettings() {
         if (
             this.plg.settings.hunks.showSigns ||
-            this.plg.settings.hunks.statusBar != "disabled" ||
-            this.plg.settings.hunks.hunkCommands
+            this.plg.settings.hunks.statusBar != "disabled"
         ) {
             this.activateFeature();
         }

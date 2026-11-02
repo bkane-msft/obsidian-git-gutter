@@ -1,18 +1,18 @@
 import { execFileSync } from "child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs";
+import { mkdtempSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import path from "path";
 import { describe, expect, it } from "vitest";
 import { computeHunks } from "../../../src/editor/signs/diff";
 import { Hunks } from "../../../src/editor/signs/hunks";
 
-type RoundTripCase = {
+type DiffCase = {
     name: string;
     oldText: string;
     newText: string;
 };
 
-const cases: RoundTripCase[] = [
+const cases: DiffCase[] = [
     {
         name: "adds a line in the middle",
         oldText: "one\nthree\n",
@@ -114,36 +114,6 @@ describe("computeHunks compared with git diff --no-index", () => {
                     added: { start: added.start, count: added.count },
                 }))
             );
-        } finally {
-            rmSync(dir, { recursive: true, force: true });
-        }
-    });
-});
-
-describe("patches generated from computed hunks", () => {
-    it.each(cases)("can apply a patch that $name", ({ oldText, newText }) => {
-        const dir = createTempDirectory();
-        try {
-            const file = path.join(dir, "note.md");
-            const patchFile = path.join(dir, "change.patch");
-            writeFileSync(file, oldText);
-
-            const { hunks } = computeHunks(
-                oldText,
-                newText,
-                undefined,
-                undefined
-            );
-            const patch = Hunks.createPatch("note.md", hunks, "100644").join(
-                "\n"
-            );
-            writeFileSync(patchFile, patch + "\n");
-
-            execFileSync("git", ["apply", "--unidiff-zero", patchFile], {
-                cwd: dir,
-            });
-
-            expect(readFileSync(file, "utf8")).toBe(newText);
         } finally {
             rmSync(dir, { recursive: true, force: true });
         }

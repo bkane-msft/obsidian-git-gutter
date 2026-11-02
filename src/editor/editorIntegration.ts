@@ -25,11 +25,7 @@ export class EditorIntegration {
 
     refreshSignsSettings() {
         const hunkSettings = this.plg.settings.hunks;
-        if (
-            hunkSettings.showSigns ||
-            hunkSettings.statusBar != "disabled" ||
-            hunkSettings.hunkCommands
-        ) {
+        if (hunkSettings.showSigns || hunkSettings.statusBar != "disabled") {
             this.signsFeature.deactivateFeature();
             this.signsFeature.activateFeature();
         } else {

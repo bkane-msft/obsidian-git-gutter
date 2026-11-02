@@ -1,25 +1,21 @@
 import { Notice, Platform, Plugin } from "obsidian";
 import { pluginRef } from "src/pluginGlobalRef";
-import { PromiseQueue } from "src/promiseQueue";
 import { GitGutterSettingsTab } from "src/setting/settings";
 import { addCommmands } from "./commands";
 import { DEFAULT_SETTINGS } from "./constants";
 import { EditorIntegration } from "./editor/editorIntegration";
-import { HunkActions } from "./editor/signs/hunkActions";
 import { LocalGit } from "./localGit";
 import type { ObsidianGitSettings } from "./types";
 
 /**
  * A stripped-down, local-only fork of obsidian-git that provides just the
- * editor "git gutter": change marks plus optional hunk stage/reset.
- * There is no remote, history, source-control view, or automatic commit.
+ * editor "git gutter": read-only change marks and a status-bar summary.
+ * There is no staging, remote, history, source-control view, or commit.
  */
 export default class ObsidianGit extends Plugin {
     settings!: ObsidianGitSettings;
     localGit = new LocalGit(this);
-    promiseQueue = new PromiseQueue(this);
     editorIntegration = new EditorIntegration(this);
-    hunkActions = new HunkActions(this);
     gitReady = false;
     private commandsAdded = false;
 
@@ -30,12 +26,6 @@ export default class ObsidianGit extends Plugin {
         this.addSettingTab(new GitGutterSettingsTab(this));
         this.editorIntegration.onLoadPlugin();
 
-        // Staging a hunk (and other actions) triggers a refresh request; turn
-        // that into a "refreshed" event the gutter feature listens for.
-        this.registerEvent(
-            this.app.workspace.on("obsidian-git:refresh", () => this.refresh())
-        );
-
         this.app.workspace.onLayoutReady(() => {
             this.init().catch((e) => this.displayError(e));
         });
@@ -43,7 +33,6 @@ export default class ObsidianGit extends Plugin {
 
     onunload(): void {
         this.editorIntegration.onUnloadPlugin();
-        this.promiseQueue.clear();
         pluginRef.plugin = undefined;
     }
 
@@ -65,13 +54,6 @@ export default class ObsidianGit extends Plugin {
             addCommmands(this);
             this.commandsAdded = true;
         }
-    }
-
-    async isAllInitialized(): Promise<boolean> {
-        if (!this.gitReady) {
-            await this.init();
-        }
-        return this.gitReady;
     }
 
     /** Recompute the gutter for all open editors. */

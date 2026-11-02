@@ -27,21 +27,6 @@ export class GitGutterSettingsTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName("Hunk commands")
-            .setDesc(
-                "Add commands to stage or reset individual hunks and jump between them."
-            )
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(settings.hunks.hunkCommands)
-                    .onChange(async (value) => {
-                        settings.hunks.hunkCommands = value;
-                        await this.plugin.saveSettings();
-                        this.plugin.editorIntegration.refreshSignsSettings();
-                    })
-            );
-
-        new Setting(containerEl)
             .setName("Editor change summary in status bar")
             .setDesc(
                 "Show a +added ~changed -deleted summary for the active editor in the status bar."

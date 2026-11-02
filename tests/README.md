@@ -3,8 +3,9 @@
 This directory contains the automated test setup for the git-gutter plugin.
 
 Tests run in Node with Vitest and use a small local `obsidian` stub. The suite
-covers the pure diff/hunk/patch logic that powers the gutter; it does not launch
-Obsidian and does not exercise the `git` binary.
+covers the pure diff/hunk logic that powers the gutter; it does not launch
+Obsidian. `gitDiffParity.test.ts` shells out to `git diff --no-index` as a
+reference.
 
 ## Commands
 
@@ -52,7 +53,7 @@ does not provide on its own:
 
 -   `diff.test.ts` — hunk computation from two texts.
 -   `hunks.test.ts` — hunk/sign helpers.
--   `patchRoundTrip.test.ts` — patch creation round-trips.
+-   `gitDiffParity.test.ts` — computed hunks match `git diff --no-index`.
 
 ## Design Principles
 
