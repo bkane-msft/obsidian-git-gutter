@@ -20,9 +20,6 @@ importers:
       codemirror:
         specifier: ^6.0.2
         version: 6.0.2
-      diff2html:
-        specifier: ^3.4.56
-        version: 3.4.56
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.5
@@ -366,10 +363,6 @@ packages:
   '@oxc-project/types@0.139.0':
     resolution: {integrity: sha512-r9gHphtCs+1M7J0pw6Sn/hh/Wpa/iQrOOkrNAlVLF/gHq+/CJmHIWKKUUhdWjcD6CIa8idarspCsASiXCXvFUw==}
 
-  '@profoundlogic/hogan@3.0.4':
-    resolution: {integrity: sha512-pmNVGuooS30Mm7YbZd5T7E5zYVO6D5Ct91sn4T39mUvMUc3sCGridcnhAufL1/Bz2QzAtzEn0agNrdk3+5yWzw==}
-    hasBin: true
-
   '@rolldown/binding-android-arm64@1.1.5':
     resolution: {integrity: sha512-lZg8fqIv2v7FF237bwMgzGZEJvGL79/s5knJ/i6FmsGF4XXlzccZ4jb+TrFIxtSSxFtIpdsgrPZeMk1I9AFcyQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -629,9 +622,6 @@ packages:
   '@vitest/utils@4.1.10':
     resolution: {integrity: sha512-fy9am/HWxbaGt/Sawrp90vt6Y6jQwf1RX77cz3uwoJwJVMli/e1IEwRPnMNJ7vKfPTwo0diXifkpPvwH9v7nGA==}
 
-  abbrev@1.1.1:
-    resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
-
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
@@ -730,14 +720,6 @@ packages:
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
-
-  diff2html@3.4.56:
-    resolution: {integrity: sha512-u9gfn+BlbHcyO7vItCIC4z49LJDUt31tODzOfAuJ5R1E7IdlRL6KjugcB9zOpejD+XiR+dDZbsnHSQ3g6A/u8A==}
-    engines: {node: '>=12'}
-
-  diff@8.0.4:
-    resolution: {integrity: sha512-DPi0FmjiSU5EvQV0++GFDOJ9ASQUVFh5kD+OzOnYdi7n3Wpm9hWWGfB/O2blfHcMVTL5WkQXSnRiK9makhrcnw==}
-    engines: {node: '>=0.3.1'}
 
   es-module-lexer@2.3.1:
     resolution: {integrity: sha512-shc1dbU90Yl/xq1QrC7QRtfcwURZuVRfPhZbDoldJ1cn1gzDvBaBWlv0eFolj5+0znnPJz5TXLxsN77X/12KTA==}
@@ -853,10 +835,6 @@ packages:
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
-
-  highlight.js@11.11.1:
-    resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
-    engines: {node: '>=12.0.0'}
 
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
@@ -1037,10 +1015,6 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
-
-  nopt@1.0.10:
-    resolution: {integrity: sha512-NWmpvLSqUrgrAC9HCuxEvb+PSloHpqVu+FqcO4eeF2h5qYRhA7ev6KvelyQAKtegUbC6RypJnlEOhd8vloNKYg==}
-    hasBin: true
 
   obsidian@1.13.1:
     resolution: {integrity: sha512-qtTEA2pmhJzhuhJqzbBFRYhpIOqvW+krDYjtFynv66KbxBbumHBlsJfWw3I4jtnK/6fZwbQhCrmmDdRwXmX56w==}
@@ -1568,10 +1542,6 @@ snapshots:
 
   '@oxc-project/types@0.139.0': {}
 
-  '@profoundlogic/hogan@3.0.4':
-    dependencies:
-      nopt: 1.0.10
-
   '@rolldown/binding-android-arm64@1.1.5':
     optional: true
 
@@ -1851,8 +1821,6 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
-  abbrev@1.1.1: {}
-
   acorn-jsx@5.3.2(acorn@8.17.0):
     dependencies:
       acorn: 8.17.0
@@ -1946,15 +1914,6 @@ snapshots:
   deep-is@0.1.4: {}
 
   detect-libc@2.1.2: {}
-
-  diff2html@3.4.56:
-    dependencies:
-      '@profoundlogic/hogan': 3.0.4
-      diff: 8.0.4
-    optionalDependencies:
-      highlight.js: 11.11.1
-
-  diff@8.0.4: {}
 
   es-module-lexer@2.3.1: {}
 
@@ -2100,9 +2059,6 @@ snapshots:
 
   has-flag@4.0.0: {}
 
-  highlight.js@11.11.1:
-    optional: true
-
   html-escaper@2.0.2: {}
 
   ignore@5.3.2: {}
@@ -2245,10 +2201,6 @@ snapshots:
   nanoid@3.3.16: {}
 
   natural-compare@1.4.0: {}
-
-  nopt@1.0.10:
-    dependencies:
-      abbrev: 1.1.1
 
   obsidian@1.13.1(@codemirror/state@6.7.1)(@codemirror/view@6.43.1):
     dependencies:

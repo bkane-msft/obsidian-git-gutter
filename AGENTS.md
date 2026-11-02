@@ -3,7 +3,7 @@
 This repository is **git-gutter**, a stripped-down, local-only fork of the
 `obsidian-git` community plugin. It keeps only the editor "git gutter" (the
 "Signs" feature): read-only change marks in the gutter plus optional per-hunk
-stage/reset/preview. It bundles TypeScript into the root-level `main.js` loaded
+stage/reset. It bundles TypeScript into the root-level `main.js` loaded
 by Obsidian, with `manifest.json` and `styles.css` as the other release
 artifacts.
 
@@ -18,7 +18,7 @@ The runtime boundary is intentionally small:
   `isomorphic-git`, no remote, and no working-tree mutation beyond staging.
 - `src/editor/signs/` is the CodeMirror 6 gutter feature: diffing
   (`diff.ts`, `hunks.ts`, `hunkState.ts`), the gutter markers (`gutter.ts`),
-  the hunk preview tooltip (`tooltip.ts`), hunk actions (`hunkActions.ts`), and
+  hunk actions (`hunkActions.ts`), and
   activation/lifecycle (`signsIntegration.ts`, `signsProvider.ts`), plus the
   status-bar summary (`changesStatusBar.ts`).
 - `src/editor/control.ts` + `src/editor/eventsPerFilepath.ts` are the per-file

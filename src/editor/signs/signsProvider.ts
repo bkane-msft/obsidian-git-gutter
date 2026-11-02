@@ -8,11 +8,6 @@ import {
     type GitCompareResult,
 } from "../signs/hunkState";
 import { signsGutter, signsMarker } from "../signs/gutter";
-import {
-    cursorTooltipBaseTheme,
-    diffTooltipField,
-    selectedHunksState,
-} from "./tooltip";
 
 export class SignsProvider {
     constructor(private plugin: ObsidianGit) {}
@@ -63,13 +58,7 @@ export class SignsProvider {
     }
 }
 
-export const enabledSignsExtensions: Extension[] = [
-    diffTooltipField,
-    cursorTooltipBaseTheme,
-    signsGutter,
-    signsMarker,
-    selectedHunksState,
-];
+export const enabledSignsExtensions: Extension[] = [signsGutter, signsMarker];
 
 export const enabledHunksExtensions = [
     hunksState,

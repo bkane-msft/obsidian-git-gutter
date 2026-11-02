@@ -29,7 +29,7 @@ export class GitGutterSettingsTab extends PluginSettingTab {
         new Setting(containerEl)
             .setName("Hunk commands")
             .setDesc(
-                "Add commands to stage or reset individual hunks, preview them, and jump between them."
+                "Add commands to stage or reset individual hunks and jump between them."
             )
             .addToggle((toggle) =>
                 toggle

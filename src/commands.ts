@@ -1,5 +1,4 @@
 import type ObsidianGit from "./main";
-import { togglePreviewHunk } from "./editor/signs/tooltip";
 
 export function addCommmands(plugin: ObsidianGit) {
     plugin.addCommand({
@@ -35,22 +34,6 @@ export function addCommmands(plugin: ObsidianGit) {
                 );
             }
             plugin.promiseQueue.addTask(() => plugin.hunkActions.stageHunk());
-            return true;
-        },
-    });
-
-    plugin.addCommand({
-        id: "preview-hunk",
-        name: "Preview hunk",
-        editorCheckCallback: (checking, _, __) => {
-            if (checking) {
-                return (
-                    plugin.settings.hunks.hunkCommands &&
-                    plugin.hunkActions.editor !== undefined
-                );
-            }
-            const editor = plugin.hunkActions.editor!.editor;
-            togglePreviewHunk(editor);
             return true;
         },
     });

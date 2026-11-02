@@ -2,7 +2,8 @@
 
 A small, **local, read-only** Obsidian plugin that shows a Git change gutter in
 the editor — added / modified / deleted marks next to each line — plus optional
-per-hunk **stage / reset / preview**.
+per-hunk **stage / reset** commands. The gutter marks are display-only;
+clicking them does nothing.
 
 It is a stripped-down fork of
 [obsidian-git](https://github.com/Vinzent03/obsidian-git) that keeps only the
@@ -15,9 +16,9 @@ removed.
 
 - Change marks in the editor gutter compared to the staged/committed version of
   the file.
-- Click a mark (or use the commands) to preview a hunk, then **stage** it
-  (`git apply --cached`) or **reset** it back to the committed version.
-- Commands: _Stage hunk_, _Reset hunk_, _Preview hunk_, _Go to next/previous
+- Commands to **stage** the hunk under the cursor (`git apply --cached`) or
+  **reset** it back to the committed version.
+- Commands: _Stage hunk_, _Reset hunk_, _Go to next/previous
   hunk_, and _Refresh gutter_.
 - Optional per-editor change summary (`+added ~changed -deleted`) in the status
   bar.
@@ -33,7 +34,7 @@ removed.
 ## Settings
 
 - **Show gutter change marks** — toggle the gutter marks.
-- **Hunk commands** — register the stage/reset/preview/navigation commands.
+- **Hunk commands** — register the stage/reset/navigation commands.
 - **Editor change summary in status bar** — `disabled`, `colored`, or
   `monochrome`.
 - **Git binary path** — optional; defaults to `git` on your `PATH`.

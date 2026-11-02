@@ -11,7 +11,7 @@ import type { ObsidianGitSettings } from "./types";
 
 /**
  * A stripped-down, local-only fork of obsidian-git that provides just the
- * editor "git gutter": change marks plus optional hunk stage/reset/preview.
+ * editor "git gutter": change marks plus optional hunk stage/reset.
  * There is no remote, history, source-control view, or automatic commit.
  */
 export default class ObsidianGit extends Plugin {

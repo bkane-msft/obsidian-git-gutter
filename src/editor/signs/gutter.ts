@@ -5,9 +5,7 @@ import {
     DebouncedComputeHunksEffectType,
     GitCompareResultEffectType,
     hunksState,
-    HunksStateHelper,
 } from "./hunkState";
-import { togglePreviewHunk } from "./tooltip";
 
 class GitGutterMarker extends GutterMarker {
     constructor(
@@ -101,19 +99,5 @@ export const signsGutter = gutter({
     markers: (view) => view.state.field(signsMarker, false) ?? RangeSet.empty,
     initialSpacer: (_) => {
         return new GitGutterMarker("delete", false);
-    },
-    domEventHandlers: {
-        click: (view, line, event) => {
-            const hunk =
-                HunksStateHelper.getHunkAtPos(view.state, line.from, false) ??
-                HunksStateHelper.getHunkAtPos(view.state, line.from, true);
-            if (!hunk) {
-                return false;
-            }
-
-            togglePreviewHunk(view, line.from);
-            event.preventDefault();
-            return false;
-        },
     },
 });
